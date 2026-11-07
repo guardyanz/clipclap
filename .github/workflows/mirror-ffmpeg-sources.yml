@@ -1,0 +1,35 @@
+name: Mirror pinned FFmpeg sources
+on:
+  workflow_dispatch:
+    inputs:
+      source_url:
+        description: Optional temporary download URL for the pinned public source artifact
+        required: false
+        type: string
+permissions:
+  contents: write
+  actions: read
+jobs:
+  mirror:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      GH_TOKEN: ${{ github.token }}
+      SOURCE_URL: ${{ inputs.source_url }}
+    steps:
+      - name: Fetch the matching upstream source cache
+        run: |
+          if [ -n "$SOURCE_URL" ]; then
+            echo "::add-mask::$SOURCE_URL"
+            curl --fail --location --silent --show-error --output cache.zip "$SOURCE_URL"
+          else
+            gh api repos/BtbN/FFmpeg-Builds/actions/artifacts/13500906627/zip > cache.zip
+          fi
+          echo '69b13345ab4f4ab491ff3afce0711d4b7f648dab2a96213ffad23e0481abe7ff  cache.zip' | sha256sum --check
+      - name: Split and publish corresponding source assets
+        env:
+          RELEASE_REPO: ${{ github.repository }}
+        run: |
+          split -b 1536M -d --numeric-suffixes=1 --suffix-length=3 cache.zip ffmpeg-source-cache.zip.
+          sha256sum ffmpeg-source-cache.zip.*
+          gh release upload v0.1.0-beta.1 --repo "$RELEASE_REPO" --clobber ffmpeg-source-cache.zip.001 ffmpeg-source-cache.zip.002
