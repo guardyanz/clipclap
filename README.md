@@ -34,6 +34,8 @@ Download `ClipClap-Setup-0.1.0-beta.1.exe` from [Releases](https://github.com/gu
 
 The beta installer is unsigned. Windows may show an unknown-publisher notice. It requires no separate Node.js or FFmpeg installation. Chrome/Chromium availability is checked by the rendering workflow; the Windows browser runtime must be available. Some templates use remote fonts or media; AI-assisted motion requires your own provider configuration and is optional. ClipClap does not provide an AI subscription.
 
+CodeQL has open alerts pending review. Use trusted local projects and keep the servers on loopback. Read the [security scan status](docs/clipclap/SECURITY_STATUS.md) before adopting this beta.
+
 ## Run from source
 
 Requirements: **Node.js 22+**, **Bun 1.3.14+**, FFmpeg/ffprobe and a Chromium browser. Package names retain `@hyperframes/*` for internal compatibility; no npm publication is required.
