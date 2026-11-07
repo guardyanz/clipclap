@@ -1,0 +1,24 @@
+name: Assemble verified beta installer
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  assemble:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      GH_TOKEN: ${{ github.token }}
+      RELEASE_REPO: ${{ github.repository }}
+    steps:
+      - name: Recover the locally verified installer from transport chunks
+        run: |
+          gh release download v0.1.0-beta.1 --repo "$RELEASE_REPO" --pattern 'ClipClap-Setup-0.1.0-beta.1.exe.part.*'
+          cat ClipClap-Setup-0.1.0-beta.1.exe.part.* > ClipClap-Setup-0.1.0-beta.1.exe
+          echo 'e805e8938f4af0cff5754664af882269b348bbb8b5ae962b94f8101b9b084db5  ClipClap-Setup-0.1.0-beta.1.exe' | sha256sum --check
+      - name: Publish the complete installer and remove temporary transport chunks
+        run: |
+          gh release upload v0.1.0-beta.1 --repo "$RELEASE_REPO" --clobber ClipClap-Setup-0.1.0-beta.1.exe
+          for part in ClipClap-Setup-0.1.0-beta.1.exe.part.*; do
+            gh release delete-asset v0.1.0-beta.1 "$part" --repo "$RELEASE_REPO" --yes
+          done
