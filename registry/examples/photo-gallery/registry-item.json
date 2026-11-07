@@ -1,0 +1,49 @@
+{
+  "name": "photo-gallery",
+  "type": "hyperframes:example",
+  "title": "Photo Gallery",
+  "description": "9-second gallery of six full-bleed photos, each framed from its own angle with a slow camera push, cutting left on matched motion.",
+  "dimensions": {
+    "width": 1920,
+    "height": 1080
+  },
+  "duration": 9,
+  "orientations": ["landscape", "portrait", "square"],
+  "files": [
+    {
+      "path": "assets/photo-1.svg",
+      "target": "assets/photo-1.svg",
+      "type": "hyperframes:asset"
+    },
+    {
+      "path": "assets/photo-2.svg",
+      "target": "assets/photo-2.svg",
+      "type": "hyperframes:asset"
+    },
+    {
+      "path": "assets/photo-3.svg",
+      "target": "assets/photo-3.svg",
+      "type": "hyperframes:asset"
+    },
+    {
+      "path": "assets/photo-4.svg",
+      "target": "assets/photo-4.svg",
+      "type": "hyperframes:asset"
+    },
+    {
+      "path": "assets/photo-5.svg",
+      "target": "assets/photo-5.svg",
+      "type": "hyperframes:asset"
+    },
+    {
+      "path": "assets/photo-6.svg",
+      "target": "assets/photo-6.svg",
+      "type": "hyperframes:asset"
+    },
+    {
+      "path": "index.html",
+      "target": "index.html",
+      "type": "hyperframes:composition"
+    }
+  ]
+}

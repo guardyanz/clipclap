@@ -1,0 +1,109 @@
+<!doctype html>
+<html
+  lang="en"
+  data-composition-variables='[
+    {"id":"object-1","type":"image","label":"Image / SVG","default":"assets/object.svg"},
+    {"id":"caption","type":"string","label":"Caption (optional)","default":"","maxLength":80},
+    {"id":"bg-color","type":"color","label":"Background Color","default":"#0a0a0f"},
+    {"id":"text-color","type":"color","label":"Text Color","default":"#f2f2f5"}
+  ]'
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <title>SVG Motion</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=block"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+        background: var(--bg-color, #0a0a0f);
+        font-family: "Inter", sans-serif;
+      }
+      #stage {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 5vmin;
+        padding: 8vmin;
+      }
+      #obj-1 {
+        width: 34vmin;
+        height: 34vmin;
+        object-fit: contain;
+      }
+      #caption-text {
+        color: var(--text-color, #f2f2f5);
+        font-size: 3.4vmin;
+        font-weight: 600;
+        text-align: center;
+        max-width: 82%;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="6"
+      data-width="1920"
+      data-height="1080"
+    >
+      <div id="stage">
+        <img id="obj-1" src="assets/object.svg" alt="" />
+        <div id="caption-text"></div>
+      </div>
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+
+      var vars =
+        window.__hyperframes && window.__hyperframes.getVariables
+          ? window.__hyperframes.getVariables()
+          : {};
+
+      var objEl = document.getElementById("obj-1");
+      var captionEl = document.getElementById("caption-text");
+      if (vars["object-1"]) objEl.src = vars["object-1"];
+      captionEl.textContent = vars.caption || "";
+
+      gsap.set("#obj-1", { opacity: 1, scale: 1, rotation: 0, x: 0, y: 0 });
+      gsap.set("#caption-text", { opacity: 0, y: 16 });
+
+      var tl = gsap.timeline({ paused: true });
+
+      // ── CLIPCLAP:MOTION:START ──────────────────────────────────────────────
+      // The wizard replaces everything between these markers with a timeline
+      // generated from the user's plain-language description. The block below
+      // is the fallback that ships with the template and renders on its own.
+      gsap.set("#obj-1", { opacity: 0, scale: 0.7 });
+      tl.to("#obj-1", { opacity: 1, scale: 1, duration: 0.8, ease: "back.out(1.6)" }, 0);
+      tl.to("#obj-1", { rotation: 360, duration: 2.2, ease: "power2.inOut" }, 1);
+      tl.to("#obj-1", { opacity: 0, scale: 0.85, duration: 0.6, ease: "power2.in" }, 5.2);
+      // ── CLIPCLAP:MOTION:END ────────────────────────────────────────────────
+
+      tl.to("#caption-text", { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" }, 0.8);
+      tl.to("#caption-text", { opacity: 0, duration: 0.5, ease: "power2.in" }, 5.3);
+
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>

@@ -1,0 +1,62 @@
+{
+  "name": "@hyperframes/desktop",
+  "version": "0.1.0-beta.1",
+  "private": true,
+  "description": "ClipClap desktop app — double-click, pick a template, make a video. No terminal.",
+  "type": "module",
+  "main": "dist/main.js",
+  "scripts": {
+    "build": "tsup",
+    "dev": "bun run build && electron .",
+    "dist": "bun run build && electron-builder"
+  },
+  "dependencies": {
+    "@hono/node-server": "^2.0.5",
+    "@hyperframes/cli": "workspace:*",
+    "hono": "^4.0.0"
+  },
+  "devDependencies": {
+    "electron": "45.2.3",
+    "electron-builder": "26.18.0",
+    "tsup": "^8.0.0",
+    "typescript": "^5.0.0"
+  },
+  "build": {
+    "appId": "com.clipclap.app",
+    "productName": "ClipClap",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "dist/**/*"
+    ],
+    "extraResources": [
+      {
+        "from": "resources/ffmpeg",
+        "to": "ffmpeg"
+      },
+      {
+        "from": "../../registry/examples",
+        "to": "templates"
+      },
+      {
+        "from": "../../registry",
+        "to": "registry"
+      },
+      {
+        "from": "../../docs/images/catalog",
+        "to": "previews"
+      }
+    ],
+    "win": {
+      "target": "nsis",
+      "signAndEditExecutable": false
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true
+    },
+    "artifactName": "ClipClap-Setup-${version}.${ext}"
+  }
+}

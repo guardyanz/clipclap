@@ -1,0 +1,20 @@
+{
+  "name": "ambient-loop",
+  "type": "hyperframes:example",
+  "title": "Ambient Loop",
+  "description": "6-second ambient gradient background that loops seamlessly — a full 360° rotation and a matched up-and-back pulse, so the last frame cuts invisibly back to the first.",
+  "dimensions": {
+    "width": 1920,
+    "height": 1080
+  },
+  "duration": 6,
+  "orientations": ["landscape", "portrait", "square"],
+  "loop": true,
+  "files": [
+    {
+      "path": "index.html",
+      "target": "index.html",
+      "type": "hyperframes:composition"
+    }
+  ]
+}

@@ -1,0 +1,47 @@
+name: ClipClap checks
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - 'README*.md'
+      - 'docs/**'
+      - 'UPSTREAM.md'
+      - 'CONTRIBUTING.md'
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+env:
+  HYPERFRAMES_NO_TELEMETRY: '1'
+  VITE_HYPERFRAMES_NO_TELEMETRY: '1'
+concurrency:
+  group: clipclap-checks-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  downstream:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: true
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.3.14
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - run: bun install --frozen-lockfile
+      - name: Build the browser UI and local servers
+        run: bun run build:clipclap
+      - name: Downstream regressions
+        run: bun run --cwd packages/cli test -- src/utils/loopSeam.test.ts src/registry/resolver.test.ts src/server/wizardServer.public.test.ts
+      - name: CLI entry point
+        run: node packages/cli/bin/clipclap.mjs --help
+      - uses: actions/upload-artifact@v4
+        with:
+          name: clipclap-built-entrypoints
+          path: |
+            packages/desktop/dist/
+            packages/cli/dist/runtimeVersion.js

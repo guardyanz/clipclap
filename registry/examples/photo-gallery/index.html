@@ -1,0 +1,256 @@
+<!doctype html>
+<html
+  lang="en"
+  data-composition-variables='[
+    {"id":"title","type":"string","label":"Title","default":"Photo Gallery","maxLength":48},
+    {"id":"photo-1","type":"image","label":"Photo 1","default":"assets/photo-1.svg"},
+    {"id":"photo-2","type":"image","label":"Photo 2","default":"assets/photo-2.svg"},
+    {"id":"photo-3","type":"image","label":"Photo 3","default":"assets/photo-3.svg"},
+    {"id":"photo-4","type":"image","label":"Photo 4","default":"assets/photo-4.svg"},
+    {"id":"photo-5","type":"image","label":"Photo 5","default":"assets/photo-5.svg"},
+    {"id":"photo-6","type":"image","label":"Photo 6","default":"assets/photo-6.svg"},
+    {"id":"accentColor","type":"color","label":"Accent Color","default":"#06E3FA"}
+  ]'
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <title>Photo Gallery</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@600;800&display=block"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+        background: #05050a;
+        font-family: "Inter", sans-serif;
+      }
+      #stage {
+        position: absolute;
+        inset: 0;
+        overflow: hidden;
+      }
+      /* Overhangs the stage by 12% each side. A slide travels ±8% of its own
+         width at a cut, and at this width that is ~9.9% of the stage — so
+         the trailing edge never pulls inside the frame and exposes the
+         background. A stage-sized slide would show a black bar on entry.
+         Sized by inset rather than vmin so a portrait/square reshape needs
+         no rework. */
+      .frame {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: -12%;
+        right: -12%;
+        overflow: hidden;
+      }
+      .frame img {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      /* Scrim keeps the caption legible over any photo the buyer drops in —
+         without it, a light photo makes white text vanish. */
+      #scrim {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(to top, rgba(5, 5, 10, 0.72) 0%, transparent 38%);
+      }
+      #caption {
+        position: absolute;
+        left: 6vmin;
+        bottom: 6vmin;
+        display: flex;
+        align-items: center;
+        gap: 2.2vmin;
+      }
+      #caption-rule {
+        width: 0.8vmin;
+        height: 6.4vmin;
+        border-radius: 1vmin;
+        background: var(--accent, #06e3fa);
+        transform-origin: bottom center;
+      }
+      #caption-text {
+        color: #ffffff;
+        font-size: 4.6vmin;
+        font-weight: 800;
+        letter-spacing: -0.02em;
+      }
+      #counter {
+        position: absolute;
+        right: 6vmin;
+        bottom: 6vmin;
+        color: #ffffff;
+        font-size: 2.6vmin;
+        font-weight: 600;
+        font-variant-numeric: tabular-nums;
+      }
+      /* Stacked so every step occupies the same spot and the digits swap in
+         place rather than shifting the block's width. */
+      .count {
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        white-space: nowrap;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="9"
+      data-width="1920"
+      data-height="1080"
+    >
+      <div id="stage">
+        <div class="frame" id="frame-1"><img id="photo-1" src="assets/photo-1.svg" alt="" /></div>
+        <div class="frame" id="frame-2"><img id="photo-2" src="assets/photo-2.svg" alt="" /></div>
+        <div class="frame" id="frame-3"><img id="photo-3" src="assets/photo-3.svg" alt="" /></div>
+        <div class="frame" id="frame-4"><img id="photo-4" src="assets/photo-4.svg" alt="" /></div>
+        <div class="frame" id="frame-5"><img id="photo-5" src="assets/photo-5.svg" alt="" /></div>
+        <div class="frame" id="frame-6"><img id="photo-6" src="assets/photo-6.svg" alt="" /></div>
+        <div id="scrim"></div>
+        <div id="caption">
+          <div id="caption-rule"></div>
+          <div id="caption-text">Photo Gallery</div>
+        </div>
+        <!-- One span per step, toggled by zero-duration tweens. A tl.call()
+             callback would be suppressed by GSAP's seek(), so the render —
+             which advances frame by frame by seeking — would never run it. -->
+        <div id="counter">
+          <span class="count" id="count-1">01 / 06</span>
+          <span class="count" id="count-2">02 / 06</span>
+          <span class="count" id="count-3">03 / 06</span>
+          <span class="count" id="count-4">04 / 06</span>
+          <span class="count" id="count-5">05 / 06</span>
+          <span class="count" id="count-6">06 / 06</span>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+
+      var vars =
+        window.__hyperframes && window.__hyperframes.getVariables
+          ? window.__hyperframes.getVariables()
+          : {};
+
+      var COUNT = 6;
+      var SLIDE = 1.5; // seconds each photo holds the frame
+      var TRAVEL = 8; // % of frame width — the partial travel either side of a cut
+      var ENTER = 0.55; // entry ~127% of exit, per the cut-the-curve seam
+      var EXIT = 0.43;
+
+      // Uploaded files arrive as ordinary relative paths already copied into
+      // the render's project dir, so this is a plain src swap — no markup of
+      // the user's file is ever parsed.
+      for (var i = 1; i <= COUNT; i++) {
+        var img = document.getElementById("photo-" + i);
+        var v = vars["photo-" + i];
+        if (img && v) img.src = v;
+      }
+
+      var root = document.getElementById("root");
+      root.style.setProperty("--accent", vars.accentColor || "#06E3FA");
+      if (vars.title) document.getElementById("caption-text").textContent = vars.title;
+
+      // Per-slide framing: every photo is pushed IN (scale grows) so the
+      // scale-velocity sign never flips across a cut, while the origin and
+      // start scale vary so each photo is framed from its own angle.
+      var SHOTS = [
+        { from: 1.06, to: 1.16, origin: "50% 50%" },
+        { from: 1.1, to: 1.2, origin: "22% 38%" },
+        { from: 1.04, to: 1.14, origin: "78% 62%" },
+        { from: 1.12, to: 1.22, origin: "35% 78%" },
+        { from: 1.05, to: 1.15, origin: "70% 28%" },
+        { from: 1.08, to: 1.18, origin: "50% 70%" },
+      ];
+
+      // Initial states applied immediately (outside the timeline) — a
+      // tl.set(...) at position 0 in a paused timeline does not render while
+      // the playhead sits exactly at 0.
+      for (var s = 0; s < COUNT; s++) {
+        var shot = SHOTS[s];
+        gsap.set("#frame-" + (s + 1), {
+          autoAlpha: s === 0 ? 1 : 0,
+          xPercent: s === 0 ? 0 : TRAVEL,
+        });
+        gsap.set("#photo-" + (s + 1), { scale: shot.from, transformOrigin: shot.origin });
+      }
+      gsap.set("#caption", { autoAlpha: 0, y: 24 });
+      gsap.set("#caption-rule", { scaleY: 0 });
+      gsap.set("#counter", { autoAlpha: 0 });
+      gsap.set(".count", { autoAlpha: 0 });
+      gsap.set("#count-1", { autoAlpha: 1 });
+
+      var tl = gsap.timeline({ paused: true });
+
+      for (var n = 0; n < COUNT; n++) {
+        var at = n * SLIDE;
+        var frame = "#frame-" + (n + 1);
+        var photo = "#photo-" + (n + 1);
+        var isLast = n === COUNT - 1;
+
+        // Cut in: the photo appears already travelling, then decelerates —
+        // power4.out opens at maximum velocity, so the cut lands mid-motion
+        // rather than starting the slide from rest.
+        if (n > 0) {
+          tl.set(frame, { autoAlpha: 1 }, at);
+          tl.fromTo(
+            frame,
+            { xPercent: TRAVEL },
+            { xPercent: 0, duration: ENTER, ease: "power4.out" },
+            at,
+          );
+        }
+
+        // Camera with intent: a mapped push across the whole hold. This is
+        // the sustained motion for the slide — not an idle drift.
+        tl.to(photo, { scale: SHOTS[n].to, duration: SLIDE, ease: "none" }, at);
+
+        // Cut out: accelerate LEFT (the film's current) and hand the
+        // velocity to the next photo's entry. power4.in ends at maximum
+        // speed, so the cut is taken while still moving. The last photo
+        // holds instead — there is nothing to hand off to.
+        if (!isLast) {
+          tl.to(frame, { xPercent: -TRAVEL, duration: EXIT, ease: "power4.in" }, at + SLIDE - EXIT);
+          tl.set(frame, { autoAlpha: 0 }, at + SLIDE);
+        }
+      }
+
+      // The caption is the one element that survives every cut — a stable
+      // anchor while the photos change underneath it.
+      tl.to("#caption", { autoAlpha: 1, y: 0, duration: 0.6, ease: "power3.out" }, 0.35);
+      tl.to("#caption-rule", { scaleY: 1, duration: 0.45, ease: "power2.out" }, 0.55);
+      tl.to("#counter", { autoAlpha: 0.62, duration: 0.5, ease: "power2.out" }, 0.6);
+
+      // Counter steps on the same frame as each cut — a reaction on its
+      // causing frame, never a few frames after it. Zero-duration tweens
+      // (not callbacks) so a seeking render reproduces them exactly.
+      for (var c = 1; c < COUNT; c++) {
+        tl.set("#count-" + c, { autoAlpha: 0 }, c * SLIDE);
+        tl.set("#count-" + (c + 1), { autoAlpha: 1 }, c * SLIDE);
+      }
+
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>

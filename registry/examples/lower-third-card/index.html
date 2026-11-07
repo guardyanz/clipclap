@@ -1,0 +1,124 @@
+<!doctype html>
+<html
+  lang="en"
+  data-composition-variables='[
+    {"id":"name","type":"string","label":"Name","default":"Full Name","maxLength":40},
+    {"id":"role","type":"string","label":"Job Title / Role","default":"Job title or role","maxLength":60},
+    {"id":"accentColor","type":"color","label":"Accent Color","default":"#4FDB5E"}
+  ]'
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <title>Lower Third Card</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=block"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+        background: #101014;
+        font-family: "Inter", sans-serif;
+      }
+      #card {
+        position: absolute;
+        /* Viewport-relative so the wizard can reshape this to portrait or
+           square without the layout falling apart. */
+        left: 7%;
+        right: 7%;
+        bottom: 13%;
+        display: flex;
+        align-items: center;
+        gap: 2vmin;
+      }
+      #accent-bar {
+        width: 0.9vmin;
+        height: 9vmin;
+        flex-shrink: 0;
+        border-radius: 0.5vmin;
+      }
+      #text-block {
+        background: rgba(16, 16, 20, 0.85);
+        padding: 1.6vmin 2.8vmin;
+        border-radius: 6px;
+        min-width: 0;
+      }
+      #name-text {
+        color: #ffffff;
+        font-size: 4.2vmin;
+        font-weight: 800;
+        letter-spacing: -0.01em;
+        line-height: 1.1;
+      }
+      #role-text {
+        color: #c8c8d0;
+        font-size: 2.4vmin;
+        font-weight: 600;
+        margin-top: 0.4vmin;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="4"
+      data-width="1920"
+      data-height="1080"
+    >
+      <div id="card">
+        <div id="accent-bar"></div>
+        <div id="text-block">
+          <div id="name-text">Full Name</div>
+          <div id="role-text">Job title or role</div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+
+      var vars =
+        window.__hyperframes && window.__hyperframes.getVariables
+          ? window.__hyperframes.getVariables()
+          : {};
+
+      var nameEl = document.getElementById("name-text");
+      var roleEl = document.getElementById("role-text");
+      var accentBarEl = document.getElementById("accent-bar");
+
+      if (vars.name) nameEl.textContent = vars.name;
+      if (vars.role) roleEl.textContent = vars.role;
+
+      var accent = vars.accentColor || "#4FDB5E";
+      accentBarEl.style.background = accent;
+
+      // Initial hidden states applied immediately (outside the timeline) —
+      // a tl.set(...) at position 0 inside a paused timeline does not render
+      // while the playhead sits exactly at 0.
+      gsap.set("#card", { opacity: 0, x: -40 });
+      gsap.set("#accent-bar", { scaleY: 0 });
+
+      var tl = gsap.timeline({ paused: true });
+
+      tl.to("#card", { opacity: 1, x: 0, duration: 0.5, ease: "power3.out" }, 0);
+      tl.to("#accent-bar", { scaleY: 1, duration: 0.4, ease: "power2.out" }, 0.1);
+      tl.to("#card", { opacity: 0, x: -20, duration: 0.4, ease: "power2.in" }, 3.5);
+
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>

@@ -1,0 +1,134 @@
+<!doctype html>
+<html
+  lang="en"
+  data-composition-variables='[
+    {"id":"quote","type":"string","label":"Quote","default":"Small steps make lasting progress.","maxLength":180},
+    {"id":"author","type":"string","label":"Author Name","default":"Author Name","maxLength":40},
+    {"id":"accentColor","type":"color","label":"Accent Color","default":"#06E3FA"},
+    {"id":"photo","type":"image","label":"Photo","default":"assets/placeholder-avatar.svg"}
+  ]'
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <title>Quote Card</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=block"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+        background: #0a0a0f;
+        font-family: "Inter", sans-serif;
+      }
+      #stage {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        /* Viewport-relative so the wizard can reshape this to portrait or
+           square without the layout falling apart. */
+        gap: 3vmin;
+        padding: 6vmin 10%;
+      }
+      #quote-mark {
+        font-family: Georgia, serif;
+        font-size: 15vmin;
+        line-height: 1;
+        font-weight: 700;
+      }
+      #quote-text {
+        color: #ffffff;
+        font-size: 4.4vmin;
+        font-weight: 600;
+        text-align: center;
+        line-height: 1.35;
+      }
+      #author-row {
+        display: flex;
+        align-items: center;
+        gap: 1.6vmin;
+      }
+      #author-photo {
+        width: 6vmin;
+        height: 6vmin;
+        border-radius: 50%;
+        object-fit: cover;
+      }
+      #author-name {
+        color: #9a9aa5;
+        font-size: 2.4vmin;
+        font-weight: 600;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="5"
+      data-width="1920"
+      data-height="1080"
+    >
+      <div id="stage">
+        <div id="quote-mark">&ldquo;</div>
+        <div id="quote-text">Small steps make lasting progress.</div>
+        <div id="author-row">
+          <img id="author-photo" src="assets/placeholder-avatar.svg" alt="" />
+          <div id="author-name">Author Name</div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+
+      var vars =
+        window.__hyperframes && window.__hyperframes.getVariables
+          ? window.__hyperframes.getVariables()
+          : {};
+
+      var quoteEl = document.getElementById("quote-text");
+      var authorEl = document.getElementById("author-name");
+      var photoEl = document.getElementById("author-photo");
+      var quoteMarkEl = document.getElementById("quote-mark");
+
+      if (vars.quote) quoteEl.textContent = vars.quote;
+      if (vars.author) authorEl.textContent = vars.author;
+      if (vars.photo) photoEl.src = vars.photo;
+
+      var accent = vars.accentColor || "#06E3FA";
+      quoteMarkEl.style.color = accent;
+
+      // Initial hidden states applied immediately (outside the timeline) —
+      // a tl.set(...) at position 0 inside a paused timeline does not render
+      // while the playhead sits exactly at 0.
+      gsap.set("#quote-mark", { opacity: 0, y: 10 });
+      gsap.set("#quote-text", { opacity: 0, y: 20 });
+      gsap.set("#author-row", { opacity: 0, y: 16 });
+
+      var tl = gsap.timeline({ paused: true });
+
+      tl.to("#quote-mark", { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }, 0);
+      tl.to("#quote-text", { opacity: 1, y: 0, duration: 0.7, ease: "power3.out" }, 0.3);
+      tl.to("#author-row", { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" }, 0.9);
+
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>

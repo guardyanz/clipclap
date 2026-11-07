@@ -1,0 +1,132 @@
+<!doctype html>
+<html
+  lang="en"
+  data-composition-variables='[
+    {"id":"colorA","type":"color","label":"Primary Color","default":"#06E3FA"},
+    {"id":"colorB","type":"color","label":"Secondary Color","default":"#7C3AED"}
+  ]'
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <title>Ambient Loop</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+        background: #05050a;
+      }
+      #stage {
+        position: absolute;
+        inset: 0;
+        overflow: hidden;
+      }
+      /* A conic gradient rotated a full 360deg over the whole duration is
+         pixel-identical at 0deg and 360deg — the loop cut lands on the same
+         value every adjacent frame already produces, not a special-cased
+         jump. That's what makes this seamless by construction rather than
+         by manual tuning. */
+      #spin {
+        position: absolute;
+        /* Oversized so the rotating square's corners never clip the frame
+           at any rotation angle (diagonal of a square = side * sqrt(2)). */
+        width: 150vmin;
+        height: 150vmin;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: conic-gradient(
+          from 0deg,
+          var(--color-a) 0deg,
+          var(--color-b) 120deg,
+          #05050a 200deg,
+          var(--color-a) 360deg
+        );
+        filter: blur(8vmin);
+        opacity: 0.55;
+      }
+      #glow {
+        position: absolute;
+        width: 46vmin;
+        height: 46vmin;
+        top: 50%;
+        left: 50%;
+        border-radius: 50%;
+        transform: translate(-50%, -50%);
+        background: radial-gradient(circle, var(--color-a) 0%, transparent 70%);
+        filter: blur(3vmin);
+        mix-blend-mode: screen;
+      }
+      #vignette {
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(circle, transparent 40%, #05050a 100%);
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="6"
+      data-width="1920"
+      data-height="1080"
+    >
+      <div id="stage">
+        <div id="spin"></div>
+        <div id="glow"></div>
+        <div id="vignette"></div>
+      </div>
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+
+      var vars =
+        window.__hyperframes && window.__hyperframes.getVariables
+          ? window.__hyperframes.getVariables()
+          : {};
+
+      var root = document.getElementById("root");
+      root.style.setProperty("--color-a", vars.colorA || "#06E3FA");
+      root.style.setProperty("--color-b", vars.colorB || "#7C3AED");
+
+      var DURATION = 6;
+
+      var tl = gsap.timeline({ paused: true });
+
+      // Linear (ease: "none") so every frame-to-frame rotation step is
+      // identical in size, including the step from the last frame back to
+      // the first — a seamless loop, not just a coincidental endpoint match.
+      tl.to("#spin", { rotate: 360, duration: DURATION, ease: "none" }, 0);
+
+      // yoyo + repeat:1 goes up and back down within the same duration, so
+      // scale/opacity return to their exact starting values by the end —
+      // secondary motion that stays loop-safe without hand-tuning keyframes.
+      tl.to(
+        "#glow",
+        {
+          scale: 1.18,
+          opacity: 0.85,
+          duration: DURATION / 2,
+          ease: "sine.inOut",
+          yoyo: true,
+          repeat: 1,
+        },
+        0,
+      );
+      gsap.set("#glow", { opacity: 0.55 });
+
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>

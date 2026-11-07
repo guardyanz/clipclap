@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ClipClap</title>
+    <link rel="stylesheet" href="/wizard.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <span class="brand">ClipClap</span>
+      <span class="tagline">A few clicks. A video.</span>
+    </header>
+
+    <main id="app">
+      <!-- Setup: first run downloads the render engine's browser (~150 MB).
+           Shown until /api/setup reports ready, so the user never stares at a
+           progress bar that is really waiting on a silent download. -->
+      <section id="setup-view" class="view" tabindex="-1" hidden>
+        <h1>Setting up ClipClap</h1>
+        <p class="muted">Just once, on your first launch.</p>
+        <div
+          class="progress-track"
+          role="progressbar"
+          aria-valuemin="0"
+          aria-valuemax="100"
+          aria-valuenow="0"
+          aria-labelledby="setup-message"
+        >
+          <div id="setup-fill" class="progress-fill"></div>
+        </div>
+        <p id="setup-message" class="muted" aria-live="polite">Checking components…</p>
+        <div id="setup-error" class="notice notice-error" role="alert" hidden></div>
+      </section>
+
+      <section id="gallery" class="view" tabindex="-1" hidden>
+        <h1>Choose a Template</h1>
+        <p class="muted">Choose a template, customize a few fields, and make your video.</p>
+
+        <div class="toolbar">
+          <label class="sr-only" for="template-search">Search templates</label>
+          <input
+            id="template-search"
+            type="search"
+            placeholder="Search templates…"
+            autocomplete="off"
+          />
+          <span id="template-count" class="muted" aria-live="polite"></span>
+        </div>
+
+        <div id="gallery-loading" class="grid" aria-hidden="true">
+          <div class="card skeleton"></div>
+          <div class="card skeleton"></div>
+          <div class="card skeleton"></div>
+        </div>
+        <div id="gallery-grid" class="grid" hidden></div>
+        <p id="gallery-empty" class="empty" hidden>No templates are available yet.</p>
+        <div id="gallery-error" class="notice notice-error" role="alert" hidden>
+          <span id="gallery-error-text"></span>
+          <button id="gallery-retry" class="secondary-btn" type="button">Try again</button>
+        </div>
+      </section>
+
+      <section id="form-view" class="view" tabindex="-1" hidden>
+        <button id="back-btn" class="link-btn" type="button">&larr; Choose another template</button>
+        <h1 id="form-title"></h1>
+        <p id="form-description" class="muted"></p>
+        <form id="variable-form" novalidate></form>
+        <p id="form-empty" class="muted" hidden>
+          This template has no editable fields. You can still render it.
+        </p>
+
+        <!-- Only rendered for templates that declare aiMotion. -->
+        <fieldset id="motion-options" class="output-options" hidden>
+          <legend>Motion (AI)</legend>
+          <div class="field">
+            <label for="motion-prompt">Describe the motion you want</label>
+            <input
+              id="motion-prompt"
+              type="text"
+              placeholder="e.g. rotate slowly, then scale up from the center"
+            />
+            <div class="hint">Use a simple description in your own words.</div>
+          </div>
+          <div class="field">
+            <label for="motion-key">Your API key (Google Gemini)</label>
+            <input id="motion-key" type="password" autocomplete="off" placeholder="AIza…" />
+            <div class="hint">
+              Saved in this browser and sent only when you request motion.
+            </div>
+          </div>
+          <button id="motion-generate" class="secondary-btn" type="button">Generate motion</button>
+          <div id="motion-status" class="hint" aria-live="polite"></div>
+          <pre id="motion-code" class="code-preview" hidden></pre>
+        </fieldset>
+
+        <fieldset class="output-options">
+          <legend>Video format</legend>
+          <div class="field">
+            <label for="orientation-select">Orientation</label>
+            <select id="orientation-select"></select>
+            <div id="orientation-hint" class="hint"></div>
+          </div>
+          <div class="field">
+            <label for="resolution-select">Resolution</label>
+            <select id="resolution-select">
+              <option value="1080">Standard (1080)</option>
+              <option value="4k">4K — sharper, takes longer to render</option>
+            </select>
+          </div>
+        </fieldset>
+        <div id="form-error" class="notice notice-error" role="alert" hidden></div>
+        <button id="render-btn" class="primary-btn" type="submit" form="variable-form">
+          Make Video
+        </button>
+      </section>
+
+      <section id="progress-view" class="view" tabindex="-1" hidden>
+        <h1>Making your video…</h1>
+        <div
+          class="progress-track"
+          role="progressbar"
+          aria-valuemin="0"
+          aria-valuemax="100"
+          aria-valuenow="0"
+          aria-labelledby="progress-message"
+        >
+          <div id="progress-fill" class="progress-fill"></div>
+        </div>
+        <p id="progress-message" class="muted" aria-live="polite"></p>
+        <button id="cancel-btn" class="secondary-btn" type="button">Cancel</button>
+      </section>
+
+      <section id="done-view" class="view" tabindex="-1" hidden>
+        <h1 id="done-title">Your video is ready!</h1>
+        <div id="done-error" class="notice notice-error" role="alert" hidden></div>
+        <video id="result-video" class="result-video" controls playsinline hidden></video>
+        <div class="button-row">
+          <a id="download-link" class="primary-btn" hidden>Download Video</a>
+          <button id="restart-btn" class="secondary-btn" type="button">Make another video</button>
+        </div>
+      </section>
+    </main>
+
+    <script type="module" src="/wizard.js"></script>
+  </body>
+</html>

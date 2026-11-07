@@ -1,0 +1,12 @@
+{
+  "release": "autobuild-2026-11-06-12-50",
+  "filename": "ffmpeg-n9.0.2-47-gb204e94e90-win64-gpl-9.0.zip",
+  "url": "https://github.com/BtbN/FFmpeg-Builds/releases/download/autobuild-2026-11-06-12-50/ffmpeg-n9.0.2-47-gb204e94e90-win64-gpl-9.0.zip",
+  "sha256": "8436c89156c3695659bf968e26bab5b08351ed8c86c3e9dbe3d6cc66a23af0a8",
+  "buildRepository": "https://github.com/BtbN/FFmpeg-Builds",
+  "buildCommit": "c63bb308a1de656b425c132a8102f8fd5389afc5",
+  "ffmpegCommit": "b204e94e90fca64045e9ca7dd44c65678c7eb29e",
+  "sourceArtifactId": 13500906627,
+  "sourceArtifactSha256": "69b13345ab4f4ab491ff3afce0711d4b7f648dab2a96213ffad23e0481abe7ff",
+  "license": "GPL-3.0-or-later"
+}

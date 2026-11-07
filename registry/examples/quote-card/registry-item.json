@@ -1,0 +1,24 @@
+{
+  "name": "quote-card",
+  "type": "hyperframes:example",
+  "title": "Quote Card",
+  "description": "5-second testimonial/quote card with editable quote text, author, accent color, and photo.",
+  "dimensions": {
+    "width": 1920,
+    "height": 1080
+  },
+  "duration": 5,
+  "orientations": ["landscape", "portrait", "square"],
+  "files": [
+    {
+      "path": "assets/placeholder-avatar.svg",
+      "target": "assets/placeholder-avatar.svg",
+      "type": "hyperframes:asset"
+    },
+    {
+      "path": "index.html",
+      "target": "index.html",
+      "type": "hyperframes:composition"
+    }
+  ]
+}

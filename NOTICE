@@ -1,0 +1,7 @@
+ClipClap includes and is based on HyperFrames.
+Upstream: https://github.com/heygen-com/hyperframes
+Original source snapshot: 7b496df4540e71dc4c266a00d9a5829dee42b7c3
+
+HyperFrames and its original contributions remain copyright their respective authors and are licensed under Apache License 2.0. Existing per-file and asset notices apply. ClipClap is an independent downstream application and is not endorsed by HeyGen.
+
+FFmpeg binaries in the Windows distribution are separate third-party software. Their version, build configuration, upstream download and license/source references are supplied with the release. Electron and Chromium retain their bundled third-party license notices.

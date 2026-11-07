@@ -1,0 +1,25 @@
+{
+  "name": "svg-motion",
+  "type": "hyperframes:example",
+  "title": "SVG Motion (AI)",
+  "description": "Upload an SVG or image and describe the movement you want in plain language — the motion is generated for you.",
+  "dimensions": {
+    "width": 1920,
+    "height": 1080
+  },
+  "duration": 6,
+  "orientations": ["landscape", "portrait", "square"],
+  "aiMotion": true,
+  "files": [
+    {
+      "path": "assets/object.svg",
+      "target": "assets/object.svg",
+      "type": "hyperframes:asset"
+    },
+    {
+      "path": "index.html",
+      "target": "index.html",
+      "type": "hyperframes:composition"
+    }
+  ]
+}

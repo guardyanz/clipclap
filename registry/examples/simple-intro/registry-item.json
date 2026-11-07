@@ -1,0 +1,24 @@
+{
+  "name": "simple-intro",
+  "type": "hyperframes:example",
+  "title": "Simple Intro",
+  "description": "5-second animated title card with editable title, subtitle, accent color, and logo.",
+  "dimensions": {
+    "width": 1920,
+    "height": 1080
+  },
+  "duration": 5,
+  "orientations": ["landscape", "portrait", "square"],
+  "files": [
+    {
+      "path": "assets/placeholder-logo.svg",
+      "target": "assets/placeholder-logo.svg",
+      "type": "hyperframes:asset"
+    },
+    {
+      "path": "index.html",
+      "target": "index.html",
+      "type": "hyperframes:composition"
+    }
+  ]
+}

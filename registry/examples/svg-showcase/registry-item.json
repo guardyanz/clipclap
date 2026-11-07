@@ -1,0 +1,34 @@
+{
+  "name": "svg-showcase",
+  "type": "hyperframes:example",
+  "title": "SVG Showcase",
+  "description": "6-second reveal built from your own SVG or PNG files — upload up to three, set the title and colors.",
+  "dimensions": {
+    "width": 1920,
+    "height": 1080
+  },
+  "duration": 6,
+  "orientations": ["landscape", "portrait", "square"],
+  "files": [
+    {
+      "path": "assets/slot-1.svg",
+      "target": "assets/slot-1.svg",
+      "type": "hyperframes:asset"
+    },
+    {
+      "path": "assets/slot-2.svg",
+      "target": "assets/slot-2.svg",
+      "type": "hyperframes:asset"
+    },
+    {
+      "path": "assets/slot-3.svg",
+      "target": "assets/slot-3.svg",
+      "type": "hyperframes:asset"
+    },
+    {
+      "path": "index.html",
+      "target": "index.html",
+      "type": "hyperframes:composition"
+    }
+  ]
+}

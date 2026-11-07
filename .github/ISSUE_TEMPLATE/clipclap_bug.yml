@@ -1,0 +1,21 @@
+name: ClipClap bug report
+description: Report a reproducible desktop, wizard or rendering problem
+title: "[ClipClap] "
+body:
+  - type: input
+    id: version
+    attributes:
+      label: ClipClap version and Windows version
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Steps to reproduce
+      description: Include the template and expected result. Remove keys and private project data.
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Actual result, logs or screenshots

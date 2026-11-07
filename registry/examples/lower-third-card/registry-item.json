@@ -1,0 +1,19 @@
+{
+  "name": "lower-third-card",
+  "type": "hyperframes:example",
+  "title": "Lower Third Card",
+  "description": "4-second name/role overlay card with an editable accent color — for interview or talking-head footage.",
+  "dimensions": {
+    "width": 1920,
+    "height": 1080
+  },
+  "duration": 4,
+  "orientations": ["landscape", "portrait", "square"],
+  "files": [
+    {
+      "path": "index.html",
+      "target": "index.html",
+      "type": "hyperframes:composition"
+    }
+  ]
+}

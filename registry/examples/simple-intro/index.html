@@ -1,0 +1,137 @@
+<!doctype html>
+<html
+  lang="en"
+  data-composition-variables='[
+    {"id":"title","type":"string","label":"Title","default":"Your Product Name","maxLength":60},
+    {"id":"subtitle","type":"string","label":"Subtitle","default":"A short tagline for your product","maxLength":120},
+    {"id":"accentColor","type":"color","label":"Accent Color","default":"#06E3FA"},
+    {"id":"logo","type":"image","label":"Logo","default":"assets/placeholder-logo.svg"}
+  ]'
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <title>Simple Intro</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=block"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+        background: #0a0a0f;
+        font-family: "Inter", sans-serif;
+      }
+      #stage {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        /* Viewport-relative so the wizard can reshape this to portrait or
+           square without the layout falling apart. */
+        gap: 2.6vmin;
+        padding: 6vmin;
+      }
+      #logo-img {
+        width: 15vmin;
+        height: 15vmin;
+        object-fit: contain;
+      }
+      #title-text {
+        color: #ffffff;
+        font-size: 6.6vmin;
+        font-weight: 800;
+        letter-spacing: -0.02em;
+        text-align: center;
+        max-width: 88%;
+      }
+      #subtitle-text {
+        font-size: 2.9vmin;
+        font-weight: 600;
+        text-align: center;
+        max-width: 82%;
+      }
+      #accent-bar {
+        width: 18vmin;
+        height: 0.6vmin;
+        border-radius: 3px;
+        transform-origin: center;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="5"
+      data-width="1920"
+      data-height="1080"
+    >
+      <div id="stage">
+        <img id="logo-img" src="assets/placeholder-logo.svg" alt="" />
+        <div id="title-text">Your Product Name</div>
+        <div id="subtitle-text">A short tagline for your product</div>
+        <div id="accent-bar"></div>
+      </div>
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+
+      var vars =
+        window.__hyperframes && window.__hyperframes.getVariables
+          ? window.__hyperframes.getVariables()
+          : {};
+
+      var titleEl = document.getElementById("title-text");
+      var subtitleEl = document.getElementById("subtitle-text");
+      var logoEl = document.getElementById("logo-img");
+      var accentBarEl = document.getElementById("accent-bar");
+
+      if (vars.title) titleEl.textContent = vars.title;
+      if (vars.subtitle) subtitleEl.textContent = vars.subtitle;
+      if (vars.logo) logoEl.src = vars.logo;
+
+      var accent = vars.accentColor || "#06E3FA";
+      subtitleEl.style.color = accent;
+      accentBarEl.style.background = accent;
+
+      // Initial hidden states applied immediately (outside the timeline) —
+      // a tl.set(...) at position 0 inside a paused timeline does not render
+      // while the playhead sits exactly at 0.
+      gsap.set("#logo-img", { opacity: 0, scale: 0.8 });
+      gsap.set("#title-text", { opacity: 0, y: 20 });
+      gsap.set("#subtitle-text", { opacity: 0, y: 16 });
+      gsap.set("#accent-bar", { scaleX: 0 });
+
+      var tl = gsap.timeline({ paused: true });
+
+      tl.to("#logo-img", { opacity: 1, scale: 1, duration: 0.6, ease: "power3.out" }, 0);
+      tl.to("#title-text", { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" }, 0.4);
+      tl.to("#subtitle-text", { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" }, 0.8);
+      tl.to("#accent-bar", { scaleX: 1, duration: 0.5, ease: "power2.out" }, 1.4);
+
+      tl.to(
+        ["#logo-img", "#title-text", "#subtitle-text", "#accent-bar"],
+        { opacity: 0, duration: 0.5, ease: "power2.in" },
+        4.4,
+      );
+
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>
