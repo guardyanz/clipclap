@@ -33,6 +33,8 @@ jobs:
         with:
           node-version: '24'
       - run: bun install --frozen-lockfile
+      - name: Install video tools for loop seam regressions
+        run: sudo apt-get update && sudo apt-get install -y ffmpeg
       - name: Build the browser UI and local servers
         run: bun run build:clipclap
       - name: Downstream regressions

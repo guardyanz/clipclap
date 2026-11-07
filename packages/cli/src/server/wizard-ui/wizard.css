@@ -17,6 +17,11 @@
   box-sizing: border-box;
 }
 
+/* Component display rules must not override the HTML visibility state. */
+[hidden] {
+  display: none !important;
+}
+
 body {
   margin: 0;
   background: var(--bg);
