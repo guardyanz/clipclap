@@ -1,0 +1,25 @@
+{
+  "runtime": {
+    "version": "0.1.0-beta.1",
+    "electron": "45.2.3",
+    "telemetry": "1",
+    "menu": [
+      "Easy Mode — choose a template, fill in the form",
+      "Full Editor — live preview and timeline"
+    ]
+  },
+  "wizardLanguage": "en",
+  "packagedRender": "Completed via the bundled wizard; downloaded MP4 in release assets",
+  "fullEditorLoaded": true,
+  "fullEditorURL": "http://127.0.0.1:1078/#project/my-video?v=1&t=0&tab=design&rc=0",
+  "fullEditorControls": [
+    "Catalog",
+    "Export",
+    "Variables",
+    "Design",
+    "Layers",
+    "Renders"
+  ],
+  "screenshots": "Actual packaged Electron renderer; no mockups",
+  "data": "Own sample title and bundled placeholder logo; no API key or provider"
+}

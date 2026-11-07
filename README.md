@@ -12,6 +12,10 @@ ClipClap is a Windows desktop application and local browser workflow built on [H
 
 ![ClipClap template picker](docs/clipclap/screenshots/template-picker.png)
 
+![An actual local ClipClap export](docs/clipclap/screenshots/demo.gif)
+
+*Five-second output from the packaged app. [Download the MP4](https://github.com/guardyanz/clipclap/releases/download/v0.1.0-beta.1/clipclap-simple-intro-demo.mp4).*
+
 ## What ClipClap adds
 
 - An Electron Windows application with a local wizard and full Studio mode.

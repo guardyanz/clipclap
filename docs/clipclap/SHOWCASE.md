@@ -1,6 +1,6 @@
 # ClipClap in action
 
-These are screenshots of the running English wizard, not design mockups. The local workflow uses the same template server as the Windows desktop application.
+These are screenshots of the running English wizard and Studio, not design mockups. The local workflow uses the same template server as the Windows desktop application.
 
 ## Choose a template
 
@@ -12,7 +12,11 @@ These are screenshots of the running English wizard, not design mockups. The loc
 
 ## Render and download
 
-![Completed local render](screenshots/render-complete.png)
+![A frame from the actual exported video](screenshots/demo-frame.png)
+
+## Full Editor
+
+![Packaged Studio editor](screenshots/full-editor.png)
 
 Download the [five-second demo MP4](https://github.com/guardyanz/clipclap/releases/download/v0.1.0-beta.1/clipclap-simple-intro-demo.mp4) to inspect the actual export. It was rendered locally from the included `simple-intro` starter, using the title **ClipClap** and subtitle **Your ideas. A few clicks. A video.** No AI provider or API key was used.
 
